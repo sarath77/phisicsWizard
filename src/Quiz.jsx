@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import MCQ from './MCQ';
 import {Col, Row} from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 const Quiz = () => {
     let selectedIndex = useSelector((state) => {
@@ -11,14 +10,20 @@ const Quiz = () => {
     });
     let questions = useSelector((state) => [...state.quiz.questions]);
 
-    let [selectedAnswer, setSelectedAnswer] = useState(-1);
+    const dispatch = useDispatch();
+    let answerState = useSelector((state) => state.quiz.questions[state.quiz.currentQuestionIndex].userAnswer);
+    let [selectedAnswer, setSelectedAnswer] = useState(answerState);
     const handleAnswer = (answerIndex) => {
         setSelectedAnswer(answerIndex);
+        dispatch({
+            type: 'SET_CURRENT_ANSWER',
+            answer: answerIndex
+        })
     };
 
     useEffect(() => {
-        setSelectedAnswer(-1);
-    }, [selectedIndex]);
+        setSelectedAnswer(answerState);
+    }, [answerState, selectedIndex]);
 
     let answer = questions[selectedIndex].answer;
     return (<>

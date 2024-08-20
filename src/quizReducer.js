@@ -12,6 +12,17 @@ const quizReducer = (state = initialState, action) => {
                 ...state,
                 currentQuestionIndex: action.index
             };
+        case 'SET_CURRENT_ANSWER':
+            console.log('answer');
+            console.log(action.answer);
+            console.log(state.questions[state.currentQuestionIndex]);
+
+            return {
+                ...state,
+                questions: state.questions.map((question, index) =>
+                    index === state.currentQuestionIndex ? {...question, userAnswer: action.answer} : question
+                )
+            };
         case 'ANSWER_CORRECT':
             return {
                 ...state,

@@ -8,7 +8,8 @@ const MCQ = ({question, options, onAnswer}) => {
     let currIndex = useSelector((state) => state.quiz.currentQuestionIndex);
     let questions = useSelector((state) => [...state.quiz.questions]);
 
-    let [selectedIndex, setSelectedIndex] = useState(-1);
+    let answerState = useSelector((state) => state.quiz.questions[state.quiz.currentQuestionIndex].userAnswer);
+    let [selectedIndex, setSelectedIndex] = useState(answerState);
     let [isSubmitted, setSubmitted] = useState(false);
     const dispatch = useDispatch();
 
@@ -22,9 +23,9 @@ const MCQ = ({question, options, onAnswer}) => {
     }
 
     useEffect(() => {
-        setSelectedIndex(-1);
-        setSubmitted(false);
-    }, [question]);
+        setSelectedIndex(answerState);
+        setSubmitted(answerState !== -1);
+    }, [answerState, question]);
     return (<>
         <div>
             <h3>{question}</h3>
@@ -43,9 +44,10 @@ const MCQ = ({question, options, onAnswer}) => {
                     Submit
                 </Button>}
 
-                {isSubmitted && currIndex + 1 !== questions.length && <Button variant="success" onClick={() => onNextQuestion()}>
-                    Next Question
-                </Button>}
+                {isSubmitted && currIndex + 1 !== questions.length &&
+                    <Button variant="success" onClick={() => onNextQuestion()}>
+                        Next Question
+                    </Button>}
             </Col>
         </Row>
     </>);
